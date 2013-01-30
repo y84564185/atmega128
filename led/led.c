@@ -8,7 +8,7 @@ int main()
     DDRF = 0XFF;
     while(1)
 	{
-    	PORTF = 0XAA;
+		PORTF = 0XAA;
 		_delay_ms(1000);
 		PORTF = 0X55;
 		_delay_ms(1000);

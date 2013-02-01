@@ -1,4 +1,5 @@
 #include<avr/io.h>
+#include"uart.h"
 #define F_CPU 16000000UL
 #include<util/delay.h>
 void uart_init(void)
@@ -43,6 +44,8 @@ int main()
 		uart_putchar('l');
 		_delay_ms(100);
 		uart_putchar('o');
+		_delay_ms(100);
+		uart_putchar('\n');
 		_delay_ms(100);
 		uart_putchar('\r');
 		_delay_ms(100);

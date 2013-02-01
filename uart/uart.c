@@ -38,19 +38,94 @@ void PrintHex(uint8_t c)
 	uart_putchar(HexTable[c>>4]);
 	uart_putchar(HexTable[c&0x0f]);
 }
+void Prints(uint8_t *str)
+{
+	while((*str)!='\0')
+	{
+		uart_putchar(*str);
+		str++;
+	}
+	uart_putchar('\n');
+	uart_putchar('\r');
+}
+void PrintUchar(uint8_t c)
+{
+	int8_t i;
+	uint8_t dispaly_buffer[4];
+	for(i=3;i>=0;i--)
+	{
+		dispaly_buffer[i]='0'+c%10;
+		c/=10;
+	}
+	for(i=0;i<3;i++)
+	{
+		if(dispaly_buffer[i]!='0')
+			break;
+	}
+	for(;i<4;i++)
+		uart_putchar(dispaly_buffer[i]);
+	uart_putchar('\n');
+	uart_putchar('\r');
+}
+void PrintInt(uint16_t c)
+{
+	int8_t i;
+	uint8_t dispaly_buffer[6];
+	for(i=5;i>=0;i--)
+	{
+		dispaly_buffer[i]='0'+c%10;
+		c/=10;
+	}
+	for(i=0;i<5;i++)
+	{
+		if(dispaly_buffer[i]!='0')
+			break;
+	}
+	for(;i<6;i++)
+		uart_putchar(dispaly_buffer[i]);
+	uart_putchar('\n');
+	uart_putchar('\r');
+}
+void PrintLongInt(uint32_t c)
+{
+	int8_t i;
+	uint8_t dispaly_buffer[10];
+	for(i=9;i>=0;i--)
+	{
+		dispaly_buffer[i]='0'+c%10;
+		c/=10;
+	}
+	for(i=0;i<9;i++)
+	{
+		if(dispaly_buffer[i]!='0')
+			break;
+	}
+	for(;i<10;i++)
+	{
+		uart_putchar(dispaly_buffer[i]);
+	}
+	uart_putchar('\n');
+	uart_putchar('\r');
+}
 int main()
 {
 	uart_init();
-	uint8_t w=0;
+	uint8_t w=100;
+	uint16_t w1=20000;
+	uint32_t w2=2000000;
 	while(1)
 	{
-		for(w=0;w<256;w++)
-		{
-			PrintHex(w);
-			_delay_ms(100);
-			uart_putchar('\n');
-			uart_putchar('\r');
-		}
+		Prints("print 100");
+		PrintUchar(w);
+		_delay_ms(100);
+
+		Prints("print 20000");
+		PrintInt(w1);
+		_delay_ms(100);
+
+		Prints("print 2000000");
+		PrintLongInt(w2);
+		_delay_ms(100);
 	}
 	return 0;
 }

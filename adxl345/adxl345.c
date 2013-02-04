@@ -5,6 +5,7 @@
 #endif
 #include<util/delay.h>
 #include<inttypes.h>
+#include<avr/interrupt.h>
 #define Default_Gain GAIN_Two_Five
 float Buf[3];
 void adxl345_init()
@@ -44,11 +45,15 @@ int main()
 	int rv;
 	uint8_t x;
 		
+	cli();
 	uart_init();	
 	i2c_init();
 	/*for compass*/
 	adxl345_init();
+	led_init();
+	key_init();
 	Prints("adxl345_init ok!\n\r");
+	sei();
 	while(1)
 	{
 		Accelerometer_Detect();

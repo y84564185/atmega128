@@ -7,7 +7,7 @@ SIZE=avr-size
 #our obj file name
 OBJNAME=obj
 #our source file list
-SOURCEFILE=i2c.c adxl345.c uart.c
+SOURCEFILE=i2c.c adxl345.c uart.c key.c led.c
 
 all:$(OBJNAME).hex
 

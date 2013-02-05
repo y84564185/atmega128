@@ -7,8 +7,9 @@
 #include<inttypes.h>
 #include<avr/interrupt.h>
 #include<stdlib.h>
+#include<math.h>
 #define pos 0
-#define Default_Threadshold 100
+#define Default_Threadshold 50
 struct acceleration{
 	int x;
 	int y;
@@ -89,45 +90,63 @@ void adxl345_measure(struct acceleration *accel)
 }
 void adxl345_report(struct acceleration *accel)
 {
-	
-		Prints("Accelerometer_X=");
-		if(accel->x<0)
-		{
-			uart_putchar('-');
-			accel->x = -accel->x;
-		}
-		PrintInt(accel->x);
-		uart_putchar('m');
-		uart_putchar('g');
-		_delay_ms(300);
-		uart_putchar('\n');
-		uart_putchar('\r');
-		Prints("Accelerometer_Y=");
-		if(accel->y<0)
-		{
-			uart_putchar('-');
-			accel->y = -accel->y;
-		}
-		PrintInt(accel->y);
-		uart_putchar('m');
-		uart_putchar('g');
-		_delay_ms(300);
-		uart_putchar('\n');
-		uart_putchar('\r');
-		Prints("Accelerometer_Z=");
-		if(accel->z<0)
-		{
-			uart_putchar('-');
-			accel->z = -accel->z;
-		}
-		PrintInt(accel->z);
-		uart_putchar('m');
-		uart_putchar('g');
-		_delay_ms(300);
-		uart_putchar('\n');
-		uart_putchar('\r');
-		uart_putchar('\n');
-		uart_putchar('\r');
+	struct acceleration accel_origin;
+	double magnitude=0;
+	int tiltAngle;
+	accel_origin.x = accel->x;
+	accel_origin.y = accel->y;
+	accel_origin.z = accel->z;
+	Prints("Accelerometer_X=");
+	if(accel->x<0)
+	{
+		uart_putchar('-');
+		accel->x = -accel->x;
+	}
+	PrintInt(accel->x);
+	uart_putchar('m');
+	uart_putchar('g');
+	_delay_ms(300);
+	uart_putchar('\n');
+	uart_putchar('\r');
+	Prints("Accelerometer_Y=");
+	if(accel->y<0)
+	{
+		uart_putchar('-');
+		accel->y = -accel->y;
+	}
+	PrintInt(accel->y);
+	uart_putchar('m');
+	uart_putchar('g');
+	_delay_ms(300);
+	uart_putchar('\n');
+	uart_putchar('\r');
+	Prints("Accelerometer_Z=");
+	if(accel->z<0)
+	{
+		uart_putchar('-');
+		accel->z = -accel->z;
+	}
+	PrintInt(accel->z);
+	uart_putchar('m');
+	uart_putchar('g');
+	_delay_ms(300);
+	uart_putchar('\n');
+	uart_putchar('\r');
+	uart_putchar('\n');
+	uart_putchar('\r');
+	magnitude = (double)sqrt((double)(accel->x)*(accel->x)+(double)(accel->y)*(accel->y)+(double)(accel->z)*(accel->z));
+	Prints("(float)sqrt(accel->x*accel->x+accel->y*accel->y+accel->z*accel->z)=");
+	PrintLongInt((int32_t)magnitude);
+	tiltAngle = (int)round(asin(accel_origin.z/magnitude)*180/3.141592);
+	Prints("tiltAngle=");
+	if(tiltAngle<0)
+	{
+		tiltAngle = -tiltAngle;
+		uart_putchar('-');
+	}
+	PrintInt(tiltAngle);
+	uart_putchar('\n');
+	uart_putchar('\r');
 }
 int main()
 {

@@ -9,6 +9,7 @@
 #include<stdlib.h>
 #include<math.h>
 #define pos 0
+#define MAX_TILT 70
 #define Default_Threadshold 50
 struct acceleration{
 	int x;
@@ -135,8 +136,6 @@ void adxl345_report(struct acceleration *accel)
 	uart_putchar('\n');
 	uart_putchar('\r');
 	magnitude = (double)sqrt((double)(accel->x)*(accel->x)+(double)(accel->y)*(accel->y)+(double)(accel->z)*(accel->z));
-	Prints("(float)sqrt(accel->x*accel->x+accel->y*accel->y+accel->z*accel->z)=");
-	PrintLongInt((int32_t)magnitude);
 	tiltAngle = (int)round(asin(accel_origin.z/magnitude)*180/3.141592);
 	Prints("tiltAngle=");
 	if(tiltAngle<0)
@@ -147,6 +146,32 @@ void adxl345_report(struct acceleration *accel)
 	PrintInt(tiltAngle);
 	uart_putchar('\n');
 	uart_putchar('\r');
+	if(abs(tiltAngle) > MAX_TILT){
+
+	}else{
+		/*Calculate the orientation angle.
+			This is the angle between the x-y projection of the up vector onto the +y-axis,increasing clockwise in a range[0,360]
+			degrees.
+		*/
+		int orientationAngle = (int)round(atan2((double)accel_origin.y,(double)(-accel_origin.x))*180/3.141592);
+		if(orientationAngle<0){
+			/*atan2 returns [-180,180];normalize to [0,360]*/
+			orientationAngle += 360;
+		}
+		Prints("orientationAngle=");
+		PrintInt(orientationAngle);
+		uart_putchar('\n');
+		uart_putchar('\r');
+		/*find the nearest rotation*/
+		int nearestRotation = (orientationAngle +45)/90;
+		if(nearestRotation == 4){
+			nearestRotation = 0;
+		}
+		Prints("nearestRotation=");
+		PrintInt(nearestRotation);
+		uart_putchar('\n');
+		uart_putchar('\r');
+	}
 }
 int main()
 {

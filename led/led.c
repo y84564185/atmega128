@@ -9,9 +9,9 @@ int main()
     while(1)
 	{
 		PORTF = 0XAA;
-		_delay_ms(500);
+		_delay_ms(1000);
 		PORTF = 0X55;
-		_delay_ms(500);
+		_delay_ms(1000);
 	}
 	return 0;
 }
